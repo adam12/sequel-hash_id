@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Adam Daniels"]
   spec.email = "adam@mediadrive.ca"
 
-  spec.summary = %q(Easy hashid's for your Sequel primary keys)
+  spec.summary = %q(Easily obscure the primary key of your Sequel models)
 
   spec.homepage = "https://github.com/adam12/sequel-hash_id"
   spec.license = "MIT"
