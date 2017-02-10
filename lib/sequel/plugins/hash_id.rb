@@ -1,6 +1,7 @@
 require "forwardable"
 require "hashids"
 
+module Sequel::Plugins # :nodoc:
 # This plugin allows you to easily obscure the primary key of your models with
 # an encoded hashid equivalent.
 #
@@ -11,7 +12,7 @@ require "hashids"
 # :salt :: The salt used to hash/unhash the primary key values. Required.
 # :length :: By default, the length is variable. Setting an integer here forces
 #            all hashids to be a specific length.
-module Sequel::Plugins::HashId
+module HashId
   def self.apply(model, opts = {}) # :nodoc:
     model.instance_eval do
       @hash_id_state = {}
@@ -53,4 +54,5 @@ module Sequel::Plugins::HashId
 
     def_delegators :model, :with_hashid
   end
+end
 end
