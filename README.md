@@ -29,19 +29,23 @@ This plugin likely only makes sense at the Model level, so configure it
 for each model you want to have a hashid for. The only required option
 is the salt you wish to use.
 
-    plugin :hash_id, salt: "your-salt".freeze
+```ruby
+plugin :hash_id, salt: "your-salt".freeze
+```
 
 Once you've done that, you can now access the following methods:
 
-    # Get the instance's hashid
-    instance = YourModel.create
-    instance.hashid
+```ruby
+# Get the instance's hashid
+instance = YourModel.create
+instance.hashid
 
-    # Lookup using a hashid
-    YourModel.with_hashid("the-hashid")
+# Lookup using a hashid
+YourModel.with_hashid("the-hashid")
 
-    # Dataset lookup method
-    YourModel.where { someproperty == true }.with_hashid("the-hashid")
+# Dataset lookup method
+YourModel.where { ... }.with_hashid("the-hashid")
+```
 
 ## Contributing
 
