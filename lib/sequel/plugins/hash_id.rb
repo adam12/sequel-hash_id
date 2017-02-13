@@ -40,6 +40,14 @@ module HashId
 
       self[id] if id
     end
+
+    # Lookup a record with a hashid, raising +Sequel::NoMatchingError+
+    # if not found
+    def with_hashid!(hashid)
+      id ,= hasher.decode(hashid)
+
+      with_pk(id)
+    end
   end
 
   module InstanceMethods
@@ -52,7 +60,7 @@ module HashId
   module DatasetMethods
     extend Forwardable
 
-    def_delegators :model, :with_hashid
+    def_delegators :model, :with_hashid, :with_hashid!
   end
 end
 end

@@ -3,7 +3,8 @@ require "sequel"
 
 class TestSequelHashId < Minitest::Test
   def setup
-    @db = Sequel.mock(fetch: { id: 1 })
+    @db = Sequel.sqlite
+    @db.create_table(:test) { primary_key :id }
     @model = Class.new(Sequel::Model(@db[:test]))
   end
 
@@ -39,8 +40,18 @@ class TestSequelHashId < Minitest::Test
 
   def test_dataset_method
     @model.plugin :hash_id, salt: "the-salt"
+    @db[:test].insert({})
     hashid = @model.hasher.encode(1)
 
     refute_nil @model.dataset.with_hashid(hashid)
+  end
+
+  def test_with_hashid_bang
+    @model.plugin :hash_id, salt: "the-salt"
+    hashid = @model.hasher.encode(5)
+
+    assert_raises Sequel::NoMatchingRow do
+      @model.with_hashid!(hashid)
+    end
   end
 end
