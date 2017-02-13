@@ -46,7 +46,7 @@ module HashId
     def with_hashid!(hashid)
       id ,= hasher.decode(hashid)
 
-      with_pk(id)
+      with_pk!(id)
     end
   end
 
