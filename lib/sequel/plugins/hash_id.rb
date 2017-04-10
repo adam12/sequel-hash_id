@@ -27,16 +27,29 @@ module HashId
   end
 
   module ClassMethods
-    Sequel::Plugins.def_dataset_methods(self, :with_hashid)
+    Sequel::Plugins.def_dataset_methods(self, [:with_hashid, :with_hashid!])
 
     # The instance of +Hashids+ used to encode and decode values
     def hasher
       Hashids.new(@hash_id_state[:salt], @hash_id_state[:length])
     end
+  end
+
+  module InstanceMethods
+    # The hashid of the model instance
+    def hashid
+      model.hasher.encode(id) if id
+    end
+  end
+
+  module DatasetMethods
+    # extend Forwardable
+
+    # def_delegators :model, :with_hashid, :with_hashid!
 
     # Lookup a record with a hashid, returning nil if none is found
     def with_hashid(hashid)
-      id ,= hasher.decode(hashid)
+      id ,= model.hasher.decode(hashid)
 
       self[id] if id
     end
@@ -44,23 +57,10 @@ module HashId
     # Lookup a record with a hashid, raising +Sequel::NoMatchingError+
     # if not found
     def with_hashid!(hashid)
-      id ,= hasher.decode(hashid)
+      id ,= model.hasher.decode(hashid)
 
       with_pk!(id)
     end
-  end
-
-  module InstanceMethods
-    # The hashid of the model instance
-    def hashid
-      self.class.hasher.encode(id) if id
-    end
-  end
-
-  module DatasetMethods
-    extend Forwardable
-
-    def_delegators :model, :with_hashid, :with_hashid!
   end
 end
 end
