@@ -1,4 +1,3 @@
-require "forwardable"
 require "hashids"
 
 module Sequel::Plugins # :nodoc:
