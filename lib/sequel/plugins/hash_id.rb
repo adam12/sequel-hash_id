@@ -43,10 +43,6 @@ module HashId
   end
 
   module DatasetMethods
-    # extend Forwardable
-
-    # def_delegators :model, :with_hashid, :with_hashid!
-
     # Lookup a record with a hashid, returning nil if none is found
     def with_hashid(hashid)
       id ,= model.hasher.decode(hashid)
