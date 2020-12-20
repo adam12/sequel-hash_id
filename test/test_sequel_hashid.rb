@@ -2,8 +2,14 @@ require "minitest/autorun"
 require "sequel"
 
 class TestSequelHashId < Minitest::Test
+  def setup_database
+    return Sequel.connect("jdbc:sqlite::memory:") if RUBY_ENGINE == "jruby"
+
+    Sequel.sqlite
+  end
+
   def setup
-    @db = Sequel.sqlite
+    @db = setup_database
     @db.create_table(:test) { primary_key :id }
     @model = Class.new(Sequel::Model(@db[:test]))
   end
