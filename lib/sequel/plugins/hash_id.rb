@@ -1,6 +1,8 @@
+# frozen-string-literal: true
+
 require "hashids"
 
-module Sequel::Plugins # :nodoc:
+module Sequel::Plugins
 # This plugin allows you to easily obscure the primary key of your models with
 # an encoded hashid equivalent.
 #
@@ -12,13 +14,15 @@ module Sequel::Plugins # :nodoc:
 # :length :: By default, the length is variable. Setting an integer here forces
 #            all hashids to be a specific length.
 module HashId
-  def self.apply(model, opts = {}) # :nodoc:
+  # @api private
+  def self.apply(model, opts = {})
     model.instance_eval do
       @hash_id_state = {}
     end
   end
 
-  def self.configure(model, opts = {}) # :nodoc:
+  # @api private
+  def self.configure(model, opts = {})
     model.instance_eval do
       @hash_id_state[:salt] = opts[:salt] || raise(ArgumentError, "hash_id plugin missing salt option")
       @hash_id_state[:length] = opts[:length] || 0
@@ -29,6 +33,8 @@ module HashId
     Sequel::Plugins.def_dataset_methods(self, [:with_hashid, :with_hashid!])
 
     # The instance of +Hashids+ used to encode and decode values
+    #
+    # @return [Hashids]
     def hasher
       Hashids.new(@hash_id_state[:salt], @hash_id_state[:length])
     end
@@ -36,6 +42,8 @@ module HashId
 
   module InstanceMethods
     # The hashid of the model instance
+    #
+    # @return [String, nil]
     def hashid
       model.hasher.encode(id) if id
     end
@@ -43,6 +51,9 @@ module HashId
 
   module DatasetMethods
     # Lookup a record with a hashid, returning nil if none is found
+    #
+    # @param hashid [String]
+    # @return [Object, nil]
     def with_hashid(hashid)
       id ,= model.hasher.decode(hashid)
 
@@ -51,6 +62,10 @@ module HashId
 
     # Lookup a record with a hashid, raising +Sequel::NoMatchingError+
     # if not found
+    #
+    # @param hashid [String]
+    # @return [Object]
+    # @raise [Sequel::NoMatchingError]
     def with_hashid!(hashid)
       id ,= model.hasher.decode(hashid)
 
