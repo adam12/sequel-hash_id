@@ -12,6 +12,6 @@ Gem::Specification.new do |spec|
   spec.files          = ["README.md"] + Dir["lib/**/*.rb"]
   spec.require_paths  = ["lib"]
 
-  spec.add_dependency "sequel", ">= 4.0", "< 6.0"
+  spec.add_dependency "sequel", "~> 5"
   spec.add_dependency "hashids", "~> 1.0"
 end
